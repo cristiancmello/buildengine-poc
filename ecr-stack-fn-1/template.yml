@@ -1,0 +1,15 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "BuildEngine Stack"
+
+Resources:
+  FnBuildContainerEcrRepository:
+    Type: AWS::ECR::Repository
+    Properties:
+      # ImageScanningConfiguration: Json  # determines whether images are scanned for known vulnerabilities after
+      # being pushed to the repository
+      # ImageTagMutability: String # tag mutability for repo. [IMMUTABLE | MUTABLE]
+      # LifecyclePolicy: LifecyclePolicy # Creates or updates a lifecycle policy.
+      RepositoryName: fnbuildimagef1/custom-node
+      # RepositoryPolicyText: Json # The JSON repository policy text to apply to the repository.
+      # Tags:
+      #   - Tag

@@ -11,6 +11,7 @@ Resources:
   FnBuild:
     Type: AWS::Lambda::Function
     Properties:
+      PackageType: Image
       Code:
         # Options:
         # ImageUri: String  => AWS ECR Image (https://docs.aws.amazon.com/lambda/latest/dg/configuration-images.html)
@@ -18,21 +19,22 @@ Resources:
         # S3Key: String
         # S3ObjectVersion: String
         # ZipFile: String
-        ZipFile: |
-          exports.handler = async (event, context) => {
-            return {
-              statusCode: 200,
-              body: JSON.stringify({
-                message: `Go AWS Lambda! ${(await message({ time: 1, copy: 'Your function executed successfully!'}))}`,
-              }),
-            };
-          };
+        # ZipFile: |
+        #   exports.handler = async (event, context) => {
+        #     return {
+        #       statusCode: 200,
+        #       body: JSON.stringify({
+        #         message: `Go AWS Lambda! ${(await message({ time: 1, copy: 'Your function executed successfully!'}))}`,
+        #       }),
+        #     };
+        #   };
 
-          const message = ({ time, ...rest }) => new Promise((resolve, reject) =>
-            setTimeout(() => {
-              resolve(`${rest.copy} (with a delay)`);
-            }, time * 1000)
-          );
+        #   const message = ({ time, ...rest }) => new Promise((resolve, reject) =>
+        #     setTimeout(() => {
+        #       resolve(`${rest.copy} (with a delay)`);
+        #     }, time * 1000)
+        #   );
+        ImageUri: 467742762527.dkr.ecr.us-east-1.amazonaws.com/fnbuildimagef1/custom-node:latest
       # CodeSigningConfigArn: String => Not supported by CF
       # DeadLetterConfig:  => Especifica a queue ou topico onde Lambda envia eventos assincronos quando falham
       #   DeadLetterConfig
@@ -43,7 +45,7 @@ Resources:
       # FileSystemConfigs: => Conexão com AWS EFS file system
       #   - FileSystemConfig
       FunctionName: "fnbuildengine"
-      Handler: index.handler
+      # Handler: index.handler
       # ImageConfig: => Configuração da imagem de Container Docker (https://docs.aws.amazon.com/lambda/latest/dg/images-create.html#images-parms)
       #   ImageConfig
       # KmsKeyArn: String => usado para encriptar as env vars
@@ -53,7 +55,7 @@ Resources:
       # PackageType: String => [Image : para container image | Zip : para .zip file]
       # ReservedConcurrentExecutions: Integer => numero de execuções simultaneas reservadas a funcao
       Role: !GetAtt FnBuildLambdaExecutionRole.Arn # ARN da function's execution role
-      Runtime: nodejs12.x
+      # Runtime: nodejs12.x
       # Tags:
       #   - Tag
       Timeout: 900 # em seg
