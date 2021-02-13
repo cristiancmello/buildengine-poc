@@ -9,7 +9,7 @@ Resources:
       # being pushed to the repository
       # ImageTagMutability: String # tag mutability for repo. [IMMUTABLE | MUTABLE]
       # LifecyclePolicy: LifecyclePolicy # Creates or updates a lifecycle policy.
-      RepositoryName: fnbuildimagef1/custom-node
+      RepositoryName: fnbuildimagef1/custom-fn-2
       # RepositoryPolicyText: Json # The JSON repository policy text to apply to the repository.
       # Tags:
       #   - Tag

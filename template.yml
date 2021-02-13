@@ -2,67 +2,82 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: "BuildEngine Stack"
 
 Resources:
-  myloggroup:
-    Type: AWS::Logs::LogGroup
-    Properties:
-      RetentionInDays: 30
-      LogGroupName: teste
+  # myloggroup:
+  #   Type: AWS::Logs::LogGroup
+  #   Properties:
+  #     RetentionInDays: 30
+  #     LogGroupName: teste
 
-  FnBuild:
-    Type: AWS::Lambda::Function
-    Properties:
-      PackageType: Image
-      Code:
-        # Options:
-        # ImageUri: String  => AWS ECR Image (https://docs.aws.amazon.com/lambda/latest/dg/configuration-images.html)
-        # S3Bucket: String
-        # S3Key: String
-        # S3ObjectVersion: String
-        # ZipFile: String
-        # ZipFile: |
-        #   exports.handler = async (event, context) => {
-        #     return {
-        #       statusCode: 200,
-        #       body: JSON.stringify({
-        #         message: `Go AWS Lambda! ${(await message({ time: 1, copy: 'Your function executed successfully!'}))}`,
-        #       }),
-        #     };
-        #   };
+  # FnBuildCustomFn1:
+  #   Type: AWS::Lambda::Function
+  #   Properties:
+  #     PackageType: Image
+  #     Code:
+  #       # Options:
+  #       # ImageUri: String  => AWS ECR Image (https://docs.aws.amazon.com/lambda/latest/dg/configuration-images.html)
+  #       # S3Bucket: String
+  #       # S3Key: String
+  #       # S3ObjectVersion: String
+  #       # ZipFile: String
+  #       # ZipFile: |
+  #       #   exports.handler = async (event, context) => {
+  #       #     return {
+  #       #       statusCode: 200,
+  #       #       body: JSON.stringify({
+  #       #         message: `Go AWS Lambda! ${(await message({ time: 1, copy: 'Your function executed successfully!'}))}`,
+  #       #       }),
+  #       #     };
+  #       #   };
 
-        #   const message = ({ time, ...rest }) => new Promise((resolve, reject) =>
-        #     setTimeout(() => {
-        #       resolve(`${rest.copy} (with a delay)`);
-        #     }, time * 1000)
-        #   );
-        ImageUri: 467742762527.dkr.ecr.us-east-1.amazonaws.com/fnbuildimagef1/custom-node:latest
-      # CodeSigningConfigArn: String => Not supported by CF
-      # DeadLetterConfig:  => Especifica a queue ou topico onde Lambda envia eventos assincronos quando falham
-      #   DeadLetterConfig
-      Description: "BuildEngine Function"
-      Environment: # Env vars acessível para o runtime
-        Variables:
-          ENV: sandbox
-      # FileSystemConfigs: => Conexão com AWS EFS file system
-      #   - FileSystemConfig
-      FunctionName: "fnbuildengine"
-      # Handler: index.handler
-      # ImageConfig: => Configuração da imagem de Container Docker (https://docs.aws.amazon.com/lambda/latest/dg/images-create.html#images-parms)
-      #   ImageConfig
-      # KmsKeyArn: String => usado para encriptar as env vars
-      # Layers: => possibilita incorporar código adicional e conteúdo. Não é suportado se função for um container image. https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html
-      #   - String
-      MemorySize: 128
-      # PackageType: String => [Image : para container image | Zip : para .zip file]
-      # ReservedConcurrentExecutions: Integer => numero de execuções simultaneas reservadas a funcao
-      Role: !GetAtt FnBuildLambdaExecutionRole.Arn # ARN da function's execution role
-      # Runtime: nodejs12.x
-      # Tags:
-      #   - Tag
-      Timeout: 900 # em seg
-      # TracingConfig: # uso com AWS X-Ray
-      #   TracingConfig
-      # VpcConfig: # para termos conectividade com recursos da AWS numa VPC, especifique lista de subnets e sgs na VPC
-      #   VpcConfig
+  #       #   const message = ({ time, ...rest }) => new Promise((resolve, reject) =>
+  #       #     setTimeout(() => {
+  #       #       resolve(`${rest.copy} (with a delay)`);
+  #       #     }, time * 1000)
+  #       #   );
+  #       ImageUri: 467742762527.dkr.ecr.us-east-1.amazonaws.com/fnbuildimagef1/custom-fn-1:latest
+  #     # CodeSigningConfigArn: String => Not supported by CF
+  #     # DeadLetterConfig:  => Especifica a queue ou topico onde Lambda envia eventos assincronos quando falham
+  #     #   DeadLetterConfig
+  #     Description: "BuildEngine Function"
+  #     Environment: # Env vars acessível para o runtime
+  #       Variables:
+  #         ENV: sandbox
+  #     # FileSystemConfigs: => Conexão com AWS EFS file system
+  #     #   - FileSystemConfig
+  #     FunctionName: "fnbuildengine-custom-fn-1"
+  #     # Handler: index.handler
+  #     # ImageConfig: => Configuração da imagem de Container Docker (https://docs.aws.amazon.com/lambda/latest/dg/images-create.html#images-parms)
+  #     #   ImageConfig
+  #     # KmsKeyArn: String => usado para encriptar as env vars
+  #     # Layers: => possibilita incorporar código adicional e conteúdo. Não é suportado se função for um container image. https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html
+  #     #   - String
+  #     MemorySize: 128
+  #     # PackageType: String => [Image : para container image | Zip : para .zip file]
+  #     # ReservedConcurrentExecutions: Integer => numero de execuções simultaneas reservadas a funcao
+  #     Role: !GetAtt FnBuildLambdaExecutionRole.Arn # ARN da function's execution role
+  #     # Runtime: nodejs12.x
+  #     # Tags:
+  #     #   - Tag
+  #     Timeout: 900 # em seg
+  #     # TracingConfig: # uso com AWS X-Ray
+  #     #   TracingConfig
+  #     # VpcConfig: # para termos conectividade com recursos da AWS numa VPC, especifique lista de subnets e sgs na VPC
+  #     #   VpcConfig
+
+  # FnBuildCustomFn2:
+  #   Type: AWS::Lambda::Function
+  #   Properties:
+  #     PackageType: Image
+  #     Code:
+  #       ImageUri: 467742762527.dkr.ecr.us-east-1.amazonaws.com/fnbuildimagef1/custom-fn-2:latest
+  #     Description: "BuildEngine Function"
+  #     Environment: # Env vars acessível para o runtime
+  #       Variables:
+  #         ENV: sandbox
+  #     FunctionName: "fnbuildengine-custom-fn-2"
+  #     MemorySize: 128
+  #     Role: !GetAtt FnBuildLambdaExecutionRole.Arn # ARN da function's execution role
+  #     Timeout: 900 # em seg
 
   FnBuildLambdaExecutionRole:
     Type: AWS::IAM::Role
