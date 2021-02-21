@@ -1,0 +1,10 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "iam:PutUserPolicy",
+      "Resource": "arn:aws:iam::467742762527:user/iac@sandbox"
+    }
+  ]
+}

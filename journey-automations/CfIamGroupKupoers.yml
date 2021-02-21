@@ -1,0 +1,124 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Parameters:
+  AwsRootAccountNumber:
+    Type: String
+  KupoersGroupName:
+    Type: String
+  KupoersNumber:
+    Type: String
+
+Resources:
+  IamGroupKupoers:
+    Type: AWS::IAM::Group
+    Properties:
+      GroupName: # A AWS recomenda montar uma string com Join para evitar erros com a criação de grupo com nome igual para outras regiões.
+        !Join # Ao final, Join irá produzir algo assim "us-east-1_awsjourneygroup". Equivalente a {"Fn::Join": ["", [{"Ref": "AWS::Region"}, {"Ref": "KupoersGroupName"}]]}
+        - "_"
+        - - !Ref AWS::Region
+          - !Ref KupoersGroupName
+          - !Ref KupoersNumber
+      # ManagedPolicyArns:
+      #   - String
+      Path: "/kupoers/"
+      Policies:
+        - PolicyName: IAMGroupKupoersPolicies
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Deny
+                NotAction:
+                  - iam:*
+                  - ecr:*
+                  - cloudtrail:*
+                Resource:
+                  - "*"
+                Condition:
+                  StringEquals:
+                    aws:RequestedRegion:
+                      - !Ref AWS::Region
+              - Effect: Allow
+                Action:
+                  - iam:GetUserPolicy
+                Resource:
+                  - !Join
+                    - ""
+                    - - "arn:aws:iam::"
+                      - !Ref AwsRootAccountNumber
+                      - ":user/kupoers*"
+              - Effect: Allow
+                Action:
+                  - iam:ListPolicies
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - iam:ListUsers
+                Resource:
+                  - !Join
+                    - ""
+                    - - "arn:aws:iam::"
+                      - !Ref AwsRootAccountNumber
+                      - ":group/kupoers"
+                  - !Join
+                    - ""
+                    - - "arn:aws:iam::"
+                      - !Ref AwsRootAccountNumber
+                      - ":user/*"
+              - Effect: Allow
+                Action:
+                  - iam:ListGroups
+                Resource:
+                  - !Join
+                    - ""
+                    - - "arn:aws:iam::"
+                      - !Ref AwsRootAccountNumber
+                      - ":group/"
+              - Effect: Allow
+                Action:
+                  - iam:PutUserPolicy
+                  - iam:GetGroup
+                  - iam:GetUser
+                  - iam:ListUserPolicies
+                  - iam:ListAttachedUserPolicies
+                  - iam:ListGroupsForUser
+                  - iam:ListGroupPolicies
+                  - iam:ListAttachedGroupPolicies
+                  - iam:DeleteUserPolicy
+                Resource:
+                  - !Join
+                    - ""
+                    - - "arn:aws:iam::"
+                      - !Ref AwsRootAccountNumber
+                      - ":group/kupoers"
+                  - !Join
+                    - ""
+                    - - "arn:aws:iam::"
+                      - !Ref AwsRootAccountNumber
+                      - ":user/${aws:username}"
+              - Effect: Deny
+                Action:
+                  - ecr:CreateRepository
+                  - ecr:DeleteRepository
+                NotResource:
+                  - !Join
+                    - ""
+                    - - "arn:aws:ecr:"
+                      - !Ref AWS::Region
+                      - ":"
+                      - !Ref AwsRootAccountNumber
+                      - ":repository/${aws:username}*"
+              - Effect: Allow
+                Action:
+                  - ecr:DescribeRepositories
+                Resource:
+                  - "*"
+
+Outputs:
+  IamGroupKupoersArn:
+    Description: IAM User Group ARN
+    Value: !GetAtt IamGroupKupoers.Arn
+  IamGroupKupoersGroupName:
+    Description: IAM User Group
+    Value: !Ref IamGroupKupoers
+    Export:
+      Name: !Join [ ":", [ !Ref "AWS::StackName", IamGroupKupoersGroupName ] ]

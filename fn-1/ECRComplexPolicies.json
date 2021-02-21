@@ -1,0 +1,17 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "allow public pull",
+      "Effect": "Allow",
+      "NotPrincipal": {
+        "AWS": [
+          "arn:aws:iam::467742762527:user/sandboxuser-a"
+        ]
+      },
+      "Action": [
+        "ecr:*"
+      ]
+    }
+  ]
+}
